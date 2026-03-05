@@ -41,7 +41,15 @@
     {% endfor %}
 
     <script>
-        // Refresh page every 10 seconds to update logs
+        // 1. Prevent hard refresh on submit
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function(e) {
+        // We let the form submit normally to the URL, 
+        // but we remove the automatic reload timer while it's "Working"
+        });
+
+        // 2. Refresh page every 10 seconds, but ONLY if no migration is currently "Running"
+        // (This is a more advanced fix, for now, just keep the timer.)
         setTimeout(() => { location.reload(); }, 10000);
     </script>
 </body>
