@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>mPharma Mail Migrator</title>
+    <style>
+        body { font-family: sans-serif; max-width: 800px; margin: auto; background: #f4f4f4; }
+        .card { background: white; padding: 20px; border-radius: 8px; margin-top: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        pre { background: #222; color: #0f0; padding: 10px; height: 200px; overflow-y: scroll; font-size: 12px; }
+        .status-tag { padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+        .Running { background: #fff3cd; color: #856404; }
+        .Completed { background: #d4edda; color: #155724; }
+    </style>
+</head>
+<body>
+    <h1>Mailbox Migration Panel</h1>
+    
+    <div class="card">
+        <form action="/run-migration/" method="POST">
+            {% csrf_token %}
+            <input type="email" name="src_email" placeholder="Source Email" required>
+            <input type="password" name="src_pass" placeholder="Source App Password" required><br><br>
+            
+            <input type="email" name="dest_email" value="mailarchive@mpharma.com" readonly>
+            <input type="password" name="dest_pass" placeholder="Archive App Password" required><br><br>
+            
+            <input type="text" name="folder" placeholder="Former_Employees/Faisal_Issaka" required><br><br>
+            
+            <label><input type="checkbox" name="dry_run"> Dry Run (Simulation)</label><br><br>
+            
+            <button type="submit" style="background: #00A651; color: white; padding: 10px 20px; border: none; cursor: pointer;">Run Migration</button>
+        </form>
+    </div>
+
+    <h2>Recent Tasks</h2>
+    {% for task in tasks %}
+    <div class="card">
+        <strong>{{ task.source_email }}</strong> ➔ {{ task.folder_name }} 
+        <span class="status-tag {{ task.status }}">{{ task.status }}</span>
+        <pre>{{ task.log_output|linebreaksbr }}</pre>
+    </div>
+    {% endfor %}
+
+    <script>
+        // Refresh page every 10 seconds to update logs
+        setTimeout(() => { location.reload(); }, 10000);
+    </script>
+</body>
+</html>
